@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  password      String
+
+  plan          String    @default("free")
+  status        String    @default("active")
+
+  // Dados do Quiz (perfil alimentar)
+  diabetesType  String?
+  dietType      String?
+  allergies     String[]
+  dislikedFoods String[]
+  goal          String?
+  weight        Float?
+  mealsPerDay   Int       @default(3)
+
+  // Progresso
+  completedRecipes String[]
+  glucoseReadings  GlucoseReading[]
+
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  lastLoginAt   DateTime?
+
+  // Pagamento
+  paytCustomerId String?
+  paidAt         DateTime?
+  planExpiresAt  DateTime?
+
+  // Reset de senha
+  resetToken       String?
+  resetTokenExpiry DateTime?
+
+  @@map("users")
+}
+
+model GlucoseReading {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  value       Float
+  status      String
+  measuredAt  DateTime @default(now())
+  notes       String?
+
+  @@map("glucose_readings")
+}
+
+model PaymentLog {
+  id          String   @id @default(cuid())
+  email       String
+  event       String
+  amount      Float?
+  plan        String?
+  paytPayload Json
+  createdAt   DateTime @default(now())
+
+  @@map("payment_logs")
+}

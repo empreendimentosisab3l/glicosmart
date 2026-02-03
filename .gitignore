@@ -1,0 +1,17 @@
+node_modules
+# Keep environment variables out of version control
+.env
+.env.local
+
+# Next.js build output
+.next
+out
+
+# Prisma generated client
+/src/generated/prisma
+
+# Debug logs
+npm-debug.log*
+
+# Vercel
+.vercel
