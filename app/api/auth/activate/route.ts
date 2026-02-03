@@ -4,6 +4,8 @@ import { hashPassword } from '@/lib/auth/password'
 import { createSession } from '@/lib/auth/session'
 import { z } from 'zod'
 
+export const dynamic = 'force-dynamic'
+
 const activateSchema = z.object({
     email: z.string().email('Email inválido'),
     password: z.string().min(6, 'A senha deve ter no mínimo 6 caracteres'),

@@ -5,6 +5,8 @@ import { sendResetEmail } from '@/lib/email/sendResetEmail'
 import { z } from 'zod'
 import crypto from 'crypto'
 
+export const dynamic = 'force-dynamic'
+
 const requestResetSchema = z.object({
   email: z.string().email('Email inválido'),
 })
