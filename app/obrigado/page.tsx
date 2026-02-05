@@ -116,8 +116,10 @@ function ThankYouContent() {
                                 <input
                                     type="email"
                                     value={email}
-                                    disabled // Email is fixed from checkout usually
-                                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-500 outline-none cursor-not-allowed"
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="seu@email.com"
+                                    required
+                                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all text-slate-800 placeholder:text-slate-400"
                                 />
                             </div>
 
