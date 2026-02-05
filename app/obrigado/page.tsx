@@ -50,11 +50,8 @@ function ThankYouContent() {
                 throw new Error(data.error || 'Erro ao ativar conta')
             }
 
-            // Success - Redirect to Dashboard
-            // Small delay for UX
-            setTimeout(() => {
-                router.push('/quiz')
-            }, 1000)
+            // Success - Redirect imediato
+            window.location.href = '/quiz'
 
         } catch (err: any) {
             setError(err.message)
