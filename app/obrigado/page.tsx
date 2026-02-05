@@ -13,13 +13,24 @@ function ThankYouContent() {
     const [confirmPassword, setConfirmPassword] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [error, setError] = useState('')
+    const [isInIframe, setIsInIframe] = useState(false)
 
-    // Frame-busting: se estiver em iframe (Payt), redireciona para fora
+    // Detecta se está em iframe
     useEffect(() => {
-        if (window.self !== window.top) {
-            window.top!.location.href = window.location.href
+        try {
+            if (window.self !== window.top) {
+                setIsInIframe(true)
+            }
+        } catch (e) {
+            // Se der erro ao acessar window.top, está em iframe com restrições
+            setIsInIframe(true)
         }
     }, [])
+
+    // Função para sair do iframe (chamada por clique do usuário)
+    const handleExitIframe = () => {
+        window.open(window.location.href, '_blank')
+    }
 
     useEffect(() => {
         const emailFromUrl = searchParams.get('email')
@@ -68,11 +79,38 @@ function ThankYouContent() {
         }
     }
 
+    // Se está em iframe, mostra apenas botão para abrir em nova aba
+    if (isInIframe) {
+        return (
+            <div className="min-h-screen bg-slate-50 flex items-center justify-center py-12 px-4 font-sans">
+                <div className="max-w-md mx-auto text-center">
+                    <div className="bg-white rounded-3xl shadow-xl p-8">
+                        <div className="w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                            <Check className="w-8 h-8 text-white" strokeWidth={3} />
+                        </div>
+                        <h2 className="text-2xl font-bold text-slate-800 mb-3">Pagamento Confirmado!</h2>
+                        <p className="text-slate-500 mb-6">
+                            Clique no botão abaixo para ativar seu acesso ao GlicoSmart.
+                        </p>
+                        <button
+                            onClick={handleExitIframe}
+                            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-emerald-200 hover:shadow-emerald-300 active:scale-95 flex items-center justify-center gap-2"
+                        >
+                            <Lock className="w-5 h-5" />
+                            Ativar Meu Acesso
+                        </button>
+                        <p className="text-xs text-slate-400 mt-4">
+                            Uma nova aba será aberta para você criar sua senha.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="min-h-screen bg-slate-50 py-12 px-4 font-sans">
             <div className="max-w-2xl mx-auto">
-
-
 
                 {/* Success Banner */}
                 <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-3xl p-8 text-center text-white shadow-xl shadow-emerald-200 mb-12 relative overflow-hidden">

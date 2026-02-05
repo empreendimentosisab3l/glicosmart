@@ -16,15 +16,25 @@ function LoginForm() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isInIframe, setIsInIframe] = useState(false)
 
   const redirect = searchParams.get('redirect') || '/dashboard'
 
-  // Frame-busting: se estiver em iframe (Payt), redireciona para fora
+  // Detecta se está em iframe
   useEffect(() => {
-    if (window.self !== window.top) {
-      window.top!.location.href = window.location.href
+    try {
+      if (window.self !== window.top) {
+        setIsInIframe(true)
+      }
+    } catch (e) {
+      setIsInIframe(true)
     }
   }, [])
+
+  // Função para sair do iframe
+  const handleExitIframe = () => {
+    window.open(window.location.href, '_blank')
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -41,6 +51,27 @@ function LoginForm() {
       await new Promise(resolve => setTimeout(resolve, 100))
       window.location.href = redirect
     }
+  }
+
+  // Se está em iframe, mostra botão para abrir em nova aba
+  if (isInIframe) {
+    return (
+      <div className="text-center">
+        <p className="text-slate-500 mb-4">
+          Para fazer login, clique no botão abaixo.
+        </p>
+        <button
+          onClick={handleExitIframe}
+          className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg shadow-emerald-200"
+        >
+          <LogIn size={20} />
+          Abrir Página de Login
+        </button>
+        <p className="text-xs text-slate-400 mt-3">
+          Uma nova aba será aberta.
+        </p>
+      </div>
+    )
   }
 
   return (
