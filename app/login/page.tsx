@@ -30,7 +30,8 @@ function LoginForm() {
       setError(result.error)
       setIsSubmitting(false)
     } else {
-      router.push(redirect)
+      // Navegação forçada para garantir redirecionamento imediato
+      window.location.href = redirect
     }
   }
 
