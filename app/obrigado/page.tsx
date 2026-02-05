@@ -14,6 +14,13 @@ function ThankYouContent() {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [error, setError] = useState('')
 
+    // Frame-busting: se estiver em iframe (Payt), redireciona para fora
+    useEffect(() => {
+        if (window.self !== window.top) {
+            window.top!.location.href = window.location.href
+        }
+    }, [])
+
     useEffect(() => {
         const emailFromUrl = searchParams.get('email')
         if (emailFromUrl) {

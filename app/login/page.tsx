@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useState } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { Eye, EyeOff, LogIn, Loader2 } from 'lucide-react'
@@ -18,6 +18,13 @@ function LoginForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const redirect = searchParams.get('redirect') || '/dashboard'
+
+  // Frame-busting: se estiver em iframe (Payt), redireciona para fora
+  useEffect(() => {
+    if (window.self !== window.top) {
+      window.top!.location.href = window.location.href
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
