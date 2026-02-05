@@ -30,7 +30,8 @@ function LoginForm() {
       setError(result.error)
       setIsSubmitting(false)
     } else {
-      // Navegação forçada para garantir redirecionamento imediato
+      // Pequeno delay para garantir que o cookie seja processado pelo navegador
+      await new Promise(resolve => setTimeout(resolve, 100))
       window.location.href = redirect
     }
   }

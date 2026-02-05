@@ -35,7 +35,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const refreshSession = useCallback(async () => {
     try {
-      const res = await fetch('/api/auth/me')
+      const res = await fetch('/api/auth/me', {
+        credentials: 'same-origin'
+      })
       if (res.ok) {
         const data = await res.json()
         setUser(data.user)
@@ -63,6 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
         signal: controller.signal,
+        credentials: 'same-origin',
       })
 
       clearTimeout(timeoutId)
@@ -90,6 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password, name }),
+        credentials: 'same-origin',
       })
 
       const data = await res.json()
@@ -107,7 +111,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
-      await fetch('/api/auth/logout', { method: 'POST' })
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' })
     } finally {
       setUser(null)
     }

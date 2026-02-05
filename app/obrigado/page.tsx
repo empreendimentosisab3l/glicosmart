@@ -42,6 +42,7 @@ function ThankYouContent() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
+                credentials: 'same-origin',
             })
 
             const data = await res.json()
@@ -50,7 +51,8 @@ function ThankYouContent() {
                 throw new Error(data.error || 'Erro ao ativar conta')
             }
 
-            // Success - Redirect imediato
+            // Pequeno delay para garantir que o cookie seja processado pelo navegador
+            await new Promise(resolve => setTimeout(resolve, 100))
             window.location.href = '/quiz'
 
         } catch (err: any) {
