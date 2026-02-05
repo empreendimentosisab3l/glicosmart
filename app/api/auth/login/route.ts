@@ -46,10 +46,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    await prisma.user.update({
+    // Update lastLoginAt em background (não bloqueia o login)
+    prisma.user.update({
       where: { id: user.id },
       data: { lastLoginAt: new Date() },
-    })
+    }).catch(err => console.error('Failed to update lastLoginAt:', err))
 
     await createSession({ userId: user.id, email: user.email })
 

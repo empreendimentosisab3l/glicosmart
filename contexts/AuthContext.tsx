@@ -54,12 +54,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [refreshSession])
 
   const login = async (email: string, password: string) => {
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 15000) // 15s timeout
+
     try {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
+        signal: controller.signal,
       })
+
+      clearTimeout(timeoutId)
 
       const data = await res.json()
 
@@ -69,7 +75,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       setUser(data.user)
       return {}
-    } catch {
+    } catch (err) {
+      clearTimeout(timeoutId)
+      if (err instanceof Error && err.name === 'AbortError') {
+        return { error: 'Conexão lenta. Tente novamente.' }
+      }
       return { error: 'Erro de conexão. Tente novamente.' }
     }
   }
